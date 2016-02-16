@@ -42,16 +42,16 @@ void loop() {
 
   // use the pushbuttons to control the keyboard:
   if (digitalRead(upButton) == HIGH) {
-    Keyboard.write('w');
-  }
+    Keyboard.press('w');
+  } else { Keyboard.release('w');}
   if (digitalRead(downButton) == HIGH) {
-    Keyboard.write('a');
-  }
+    Keyboard.press('a');
+  } else { Keyboard.release('a');}
   if (digitalRead(leftButton) == HIGH) {
-    Keyboard.write('s');
-  }
+    Keyboard.press('s');
+  } else { Keyboard.release('s');}
   if (digitalRead(rightButton) == HIGH) {
-    Keyboard.write('d');
-  }
+    Keyboard.press('d');
+  } else { Keyboard.release('d');}
   delay(31);
 }
