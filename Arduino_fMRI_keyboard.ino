@@ -17,7 +17,7 @@ int y;
 //mouse settings
 int offsetX = 330; // opravit podle joysticku
 int offsetY = 330; // opravit podle joysticku
-int stred = 40; // nastavit stred
+int stred = 0; // nastavit stred
 int mouse_move_size_X = 8;
 int mouse_move_size_Y = 8;
 
@@ -35,7 +35,7 @@ void setup() {
   pinMode(analogInputY, INPUT);
   
   //don't know what this does
-  //attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
+  attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
   
   for (int i=0; i < buttonNum; i++) {
     pinMode(buttonPin[i], INPUT);
@@ -62,7 +62,7 @@ void loop() {
       Mouse.move(0,-mouse_move_size_Y);
     }
     if (y <= stred) {
-     Mouse.move(0,mouse_move_size_Y);
+      Mouse.move(0,mouse_move_size_Y);
     }
     for (int i=0; i < buttonNum; i++) {
       buttonState[i] = digitalRead(buttonPin[i]);
@@ -72,11 +72,11 @@ void loop() {
         Keyboard.release(buttonKey[i]);
       }
     }
-    delay(refresh);
   }
   if (turnONButtonState == LOW && turnedON) {
     TurnOFF();
   }
+  delay(refresh);
 }
 
 void TurnON(){
