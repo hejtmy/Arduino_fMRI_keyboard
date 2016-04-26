@@ -22,7 +22,8 @@ int mouse_move_size_X = 8;
 int mouse_move_size_Y = 8;
 
 //on off button settings
-int turnONButtonPin = 13;
+int turnONButtonPin = 12;
+int turnONLedPin = 13;
 bool turnedON = false;
 bool turnONButtonPressed = false;
 int turnONButtonState = LOW;
@@ -81,6 +82,7 @@ void loop() {
 
 void TurnON(){
   turnedON = true;
+  digitalWrite(turnONLedPin, HIGH);
   Keyboard.begin();
   Mouse.begin();
   Calibrate();
@@ -101,6 +103,7 @@ void TurnOFF(){
   Keyboard.end();
   Mouse.end();
   turnedON = false;
+  digitalWrite(turnONLedPin, LOW);
 }
 
 void trigger() {
