@@ -29,6 +29,8 @@ bool turnONButtonPressed = false;
 int turnONButtonState = LOW;
 
 int refresh = 5;
+bool shouldRefresh = false;
+unsigned long lastTimeRefresh;
 
 void setup() {
 
@@ -36,19 +38,30 @@ void setup() {
   pinMode(analogInputY, INPUT);
   
   //don't know what this does
-  attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
+  //attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
   
   for (int i=0; i < buttonNum; i++) {
     pinMode(buttonPin[i], INPUT);
   }
+  lastTimeRefresh = millis();
 }
 
 void loop() {
+	//looking ahead for fMRI synchropuls
+	if (digitalRead(triggerPin) == HIGH){
+    SynchroPulse();
+	}
   turnONButtonState = digitalRead(turnONButtonPin);
   if (turnONButtonState == HIGH && !turnedON) {
     TurnON();
   }
-  if (turnedON){
+  //as we don't have update with delay, we check if the keyboards or mice were moved in last (refresh miliseconds)
+  if ((millis() - lastTimeRefresh) > refresh){
+    lastTimeRefresh = millis();
+    shouldRefresh = true;
+  }
+  if (turnedON && shouldRefresh){
+	  shouldRefresh = false;
     //reading the mouse
     x = -(analogRead(analogInputX) - offsetX);
     y = +(analogRead(analogInputY) - offsetY);
@@ -77,15 +90,22 @@ void loop() {
   if (turnONButtonState == LOW && turnedON) {
     TurnOFF();
   }
-  delay(refresh);
 }
-
 void TurnON(){
   turnedON = true;
   digitalWrite(turnONLedPin, HIGH);
   Keyboard.begin();
   Mouse.begin();
   Calibrate();
+}
+void TurnOFF(){
+  Keyboard.end();
+  Mouse.end();
+  turnedON = false;
+  digitalWrite(turnONLedPin, LOW);
+}
+void SynchroPulse() {
+  Keyboard.write('o');
 }
 void Calibrate(){
   //setting up offset
@@ -99,20 +119,8 @@ void Calibrate(){
   offsetX = GetOffsetMedian(defXInput);
   offsetY = GetOffsetMedian(defYInput);
 }
-void TurnOFF(){
-  Keyboard.end();
-  Mouse.end();
-  turnedON = false;
-  digitalWrite(turnONLedPin, LOW);
-}
-
-void trigger() {
-  Keyboard.write('o');
-}
-
+// helpers
 int GetOffsetMedian(int array[]){
   int median = array[sizeof(array)/2];
   return(median);
 }
-
-
