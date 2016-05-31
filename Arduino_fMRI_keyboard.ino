@@ -4,6 +4,8 @@
 const int buttonNum = 4;
 
 int triggerPin = 23;
+bool pulseSent = false;
+
 int analogInputX = 11; // opravit pro Due
 int analogInputY = 10; // opravit pro Due
 
@@ -65,8 +67,12 @@ void loop() {
   }
 }
 void ReadSynchroPulse(){
-  if (digitalRead(triggerPin) == HIGH){
+  if (digitalRead(triggerPin) == HIGH && !pulseSent){
+    pulseSent = true;
     SendSynchroPulse();
+  } 
+  if (digitalRead(triggerPin) == LOW) {
+    pulseSent = false;
   }
 }
 void TurnOnOrOff(){
@@ -79,7 +85,7 @@ void TurnOnOrOff(){
   }
 }
 void JoystickRead(){
-      x = -(analogRead(analogInputX) - offsetX);
+    x = -(analogRead(analogInputX) - offsetX);
     y = +(analogRead(analogInputY) - offsetY);
     
     if (x > stred) {
