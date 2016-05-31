@@ -47,30 +47,35 @@ void setup() {
 }
 
 void loop() {
-	//looking ahead for fMRI synchropuls
-  ReadSynchroPulse();
-  turnONButtonState = digitalRead(turnONButtonPin);
-  if (turnONButtonState == HIGH && !turnedON) {
-    TurnON();
-  }
-  //as we don't have update with delay, we check if the keyboards or mice were moved in last (refresh miliseconds)
-  if ((millis() - lastTimeRefresh) > refresh){
-    lastTimeRefresh = millis();
-    shouldRefresh = true;
-  }
-  if (turnedON && shouldRefresh){
-	  shouldRefresh = false;
-    //reading the mouse
-    JoystickRead();
-    ButtonRead();
-  }
-  if (turnONButtonState == LOW && turnedON) {
-    TurnOFF();
+  TurnOnOrOff();
+  if (turnedON){
+    //looking ahead for fMRI synchropuls
+    ReadSynchroPulse();
+    //as we don't have update with delay, we check if the keyboards or mice were moved in last (refresh miliseconds)
+    if ((millis() - lastTimeRefresh) > refresh){
+      lastTimeRefresh = millis();
+      shouldRefresh = true;
+    }
+    if (turnedON && shouldRefresh){
+  	  shouldRefresh = false;
+      //reading the mouse
+      JoystickRead();
+      ButtonRead();
+    }
   }
 }
 void ReadSynchroPulse(){
   if (digitalRead(triggerPin) == HIGH){
     SendSynchroPulse();
+  }
+}
+void TurnOnOrOff(){
+  turnONButtonState = digitalRead(turnONButtonPin);
+  if (turnONButtonState == HIGH && !turnedON) {
+    TurnON();
+  }
+  if (turnONButtonState == LOW && turnedON) {
+    TurnOFF();
   }
 }
 void JoystickRead(){
@@ -92,13 +97,13 @@ void JoystickRead(){
 }
 void ButtonRead(){
   for (int i=0; i < buttonNum; i++) {
-  buttonState[i] = digitalRead(buttonPin[i]);
-  if (buttonState[i] == HIGH) {
-    Keyboard.press(buttonKey[i]);
-  } else {
-    Keyboard.release(buttonKey[i]);
+    buttonState[i] = digitalRead(buttonPin[i]);
+    if (buttonState[i] == HIGH) {
+      Keyboard.press(buttonKey[i]);
+    } else {
+      Keyboard.release(buttonKey[i]);
+    }
   }
-}
 }
 void TurnON(){
   turnedON = true;
