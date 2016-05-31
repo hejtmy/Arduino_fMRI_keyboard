@@ -67,11 +67,12 @@ void loop() {
   }
 }
 void ReadSynchroPulse(){
-  if (digitalRead(triggerPin) == HIGH && !pulseSent){
-    pulseSent = true;
-    SendSynchroPulse();
-  } 
-  if (digitalRead(triggerPin) == LOW) {
+  if (digitalRead(triggerPin) == HIGH){
+    if(!pulseSent){
+     pulseSent = true;
+     SendSynchroPulse();
+    }
+  } else {
     pulseSent = false;
   }
 }
