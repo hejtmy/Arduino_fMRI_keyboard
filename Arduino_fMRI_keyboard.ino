@@ -39,12 +39,13 @@ void setup() {
   pinMode(analogInputX, INPUT);
   pinMode(analogInputY, INPUT);
   
-  //don't know what this does
-  //attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
-  
+  //sets up button pins
   for (int i=0; i < buttonNum; i++) {
     pinMode(buttonPin[i], INPUT);
   }
+  
+  //sets up turn on button pin
+  pinMode(turnONButtonPin, INPUT_PULLUP);
   lastTimeRefresh = millis();
 }
 
@@ -78,10 +79,10 @@ void ReadSynchroPulse(){
 }
 void TurnOnOrOff(){
   turnONButtonState = digitalRead(turnONButtonPin);
-  if (turnONButtonState == HIGH && !turnedON) {
+  if (turnONButtonState == LOW && !turnedON) {
     TurnON();
   }
-  if (turnONButtonState == LOW && turnedON) {
+  if (turnONButtonState == HIGH && turnedON) {
     TurnOFF();
   }
 }
