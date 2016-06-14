@@ -57,10 +57,6 @@ void loop() {
     //as we don't have update with delay, we check if the keyboards or mice were moved in last (refresh miliseconds)
     if ((millis() - lastTimeRefresh) > refresh){
       lastTimeRefresh = millis();
-      shouldRefresh = true;
-    }
-    if (turnedON && shouldRefresh){
-  	  shouldRefresh = false;
       //reading the mouse
       JoystickRead();
       ButtonRead();
