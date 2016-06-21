@@ -1,5 +1,5 @@
-#include <Mouse.h>
-#include <Keyboard.h>
+#include "Mouse.h"
+#include "Keyboard.h"
 
 const int buttonNum = 4;
 
@@ -41,6 +41,9 @@ void setup() {
   
   //don't know what this does
   //attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
+
+  pinMode(turnONLedPin, OUTPUT);
+  pinMode(turnONButtonPin, INPUT_PULLUP);
   
   for (int i=0; i < buttonNum; i++) {
     pinMode(buttonPin[i], INPUT);
@@ -56,10 +59,6 @@ void loop() {
     //as we don't have update with delay, we check if the keyboards or mice were moved in last (refresh miliseconds)
     if ((millis() - lastTimeRefresh) > refresh){
       lastTimeRefresh = millis();
-      shouldRefresh = true;
-    }
-    if (turnedON && shouldRefresh){
-  	  shouldRefresh = false;
       //reading the mouse
       JoystickRead();
       ButtonRead();
@@ -78,10 +77,10 @@ void ReadSynchroPulse(){
 }
 void TurnOnOrOff(){
   turnONButtonState = digitalRead(turnONButtonPin);
-  if (turnONButtonState == HIGH && !turnedON) {
+  if (turnONButtonState == LOW && !turnedON) {
     TurnON();
   }
-  if (turnONButtonState == LOW && turnedON) {
+  if (turnONButtonState == HIGH && turnedON) {
     TurnOFF();
   }
 }
