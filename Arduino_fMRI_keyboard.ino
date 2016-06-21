@@ -39,15 +39,12 @@ void setup() {
   pinMode(analogInputX, INPUT);
   pinMode(analogInputY, INPUT);
   
-  //don't know what this does
-  //attachInterrupt(digitalPinToInterrupt(triggerPin),trigger,RISING);
-
   pinMode(turnONLedPin, OUTPUT);
   pinMode(turnONButtonPin, INPUT_PULLUP);
   
   for (int i=0; i < buttonNum; i++) {
     pinMode(buttonPin[i], INPUT);
-  }
+  } 
   lastTimeRefresh = millis();
 }
 
